@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타이포잔치 아카이브 Typography Archive</title>
+    <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+    <div class="header">
+        <hgroup>
+            <h1>Typojanchi Archive</h1>        
+            <h2>Focusing on East Asia, 2001–2023</h2>
+        </hgroup>
+        
+        <nav class="header-years">
+            <h2 data-year="2001">2001</h2>
+            <h2 data-year="2011">2011</h2>
+            <h2 data-year="2013">2013</h2>
+            <h2 data-year="2015">2015</h2>
+            <h2 data-year="2017">2017</h2>
+            <h2 data-year="2019">2019</h2>
+            <h2 data-year="2021">2021</h2>
+            <h2 data-year="2023">2023</h2>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="filters">
+            <div class="filter-group">
+                <select id="yearFilter" class="filter-select">
+                    <option value="">All time</option>
+                    <option value="2001">2001</option>
+                    <option value="2011">2011</option>
+                    <option value="2013">2013</option>
+                    <option value="2015">2015</option>
+                    <option value="2017">2017</option>
+                    <option value="2019">2019</option>
+                    <option value="2021">2021</option>
+                    <option value="2023">2023</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <select id="countryFilter" class="filter-select">
+                    <option value="">All country</option>
+                    <option value="한국" data-kr="한국" data-jp="韓国" data-kr-text="Korea" data-jp-text="韓国">Korea</option>
+                    <option value="일본" data-kr="일본" data-jp="日本" data-kr-text="Japan" data-jp-text="日本">Japan</option>
+                    <option value="중국" data-kr="중국" data-jp="中国" data-kr-text="China" data-jp-text="中国">China</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search">
+            </div>
+            
+            <!-- <div class="filter-group">
+                <div class="language-selector">
+                    <button id="japaneseBtn" class="language-btn active">日本語</button>
+                    <button id="koreanBtn" class="language-btn">한국어</button>
+                </div>
+            </div> -->
+            
+            <div class="thumbnail-controls">
+                <input type="range" id="sizeSlider" class="size-slider" min="270" max="450" value="270">
+                <div id="sizeDisplay" class="size-display">270px</div>
+            </div>
+        </div>
+
+        <div id="stats" class="stats" style="display: none;">
+            <!-- Stats will be populated by JavaScript -->
+        </div>
+
+        <div id="loading" class="loading">
+            로딩 중... Loading...
+        </div>
+        
+        <div id="gallery" class="gallery" style="display: none;">
+            <!-- Gallery items will be populated by JavaScript -->
+        </div>
+        
+        <div id="noResults" class="no-results" style="display: none;">
+            검색 결과가 없습니다.
+        </div>
+        
+        <div id="error" class="error" style="display: none;">
+            데이터를 불러올 수 없습니다. JSON 파일을 확인해주세요.
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content" id="modalContent">
+            <div class="modal-image-container">
+                <img id="modalImage" src="" alt="" class="modal-image">
+            </div>
+            <div class="modal-text" id="modalText">
+                <div class="modal-designer" id="modalDesigner"></div>
+                <div class="modal-title" id="modalTitle"></div>
+                <div class="modal-meta" id="modalMeta"></div>
+            </div>
+            <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="about" id="about">
+                <p class="up1500">&nbsp;</p>
+                <h2>「Typojanchi Archive — Focusing on East Asia, 2001–2023」 &copy; 2025</h2>
+                <p>本研究は、東アジアのタイポグラフィが単に西洋の影響を受けてきた周縁的な流れではなく、独自の言語構造と視覚的感性に基づき、世界のタイポグラフィ文化に新たな方向性を示しているという認識から出発しました。</p>
+                <p id="empty2">&nbsp;</p>
+                <p>本デジタルアーカイブは、2001年から2023年にかけて開催された国際タイポグラフィ・ビエンナーレ「タイポジャンチ（Typojanchi）」に参加した東アジアのデザイナーたちの作品と活動を中心に、視覚言語の変化と時代ごとの動向を時系列的に整理したデジタルアーカイブです。</p>
+                
+            </div>
+            <div class="about" id="about2">
+                <p class="up1500">&nbsp;</p>
+                <p id="empty">&nbsp;</p>
+                <p>※本アーカイブは、DNP文化振興財団 グラフィック文化に関する学術研究助成の採択研究、文部科学省科学研究費助成事業（基盤研究C）採択研究の一環として制作されました。</p>
+                <p>Research & Curation: 서혜（ソー・ヘー／Seo Hye）<br>Design & Development: 이병학（イ・ビョンハク／Lee Byounghak）</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="startPopup" class="start-popup">
+        <div class="start-popup-overlay"></div>
+        <div class="start-popup-content">
+            <h2>「Typojanchi Archive — Focusing on East Asia, 2001–2023」</h2>
+            <p><br>本研究は、東アジアのタイポグラフィが単に西洋の影響を受けてきた周縁的な流れではなく、独自の言語構造と視覚的感性に基づき、世界のタイポグラフィ文化に新たな方向性を示しているという認識から出発しました。<br>
+            <br>2001年から2023年まで開催された国際タイポグラフィ・ビエンナーレ「タイポジャンチ（Typojanchi）」に参加した東アジアのデザイナーたちの作品と活動を中心に、視覚言語の変化と時代ごとの流れを時系列的に整理したデジタルアーカイブです。<br>
+            <br>しかし、タイポジャンチ参加作家の作品は東アジア・タイポグラフィの重要な一側面を示していますが、その全体的な構造を理解するためには、教育制度、印刷技術、社会政策、政治的構造、展示文化など、多層的な文脈を併せて考察する必要があります。このような認識のもと、今後はこの範囲を拡張し、言語・政策・文化的文脈の中で、タイポグラフィを「言語・権力・技術・文化」が交差する構造として理解していくことを目指します。<br>
+            <br>また、本デジタル年表は継続的に拡張・更新される研究型プラットフォームです。今後はタイポジャンチ以外の主要な展覧会、学術機関、政策の変化、新しいデジタルメディア環境なども追加し、東アジア・タイポグラフィの同時代的な動向を立体的に可視化するビジュアル・データベースとして発展していく予定です。</p> 
+        </div>
+    </div>
+
+    <script>
+        let allData = [];
+        let filteredData = [];
+        let thumbnailSize = window.innerWidth <= 768 ? 300 : 270; // Default thumbnail size in pixels
+        let currentLanguage = 'japanese'; // Default language
+
+        // Get full image path based on year
+        function getFullImagePath(item) {
+            if (item.yr === 2001) {
+                return `img/2001/${item.file}`;
+            } else if (item.yr === 2011) {
+                return `img/2011/${item.file}`;
+            } else if (item.yr === 2013) {
+                return `img/2013/${item.file}`;
+            } else if (item.yr === 2015) {
+                return `img/2015/${item.file}`;
+            } else if (item.yr === 2017) {
+                return `img/2017/${item.file}`;
+            } else if (item.yr === 2019) {
+                return `img/2019/${item.file}`;
+            } else if (item.yr === 2021) {
+                return `img/2021/${item.file}`;
+            } else if (item.yr === 2023) {
+                return `img/2023/${item.file}`;
+            }
+            return `img/noimage.jpg`;
+        }
+
+        // Modal functions
+        function showModal(imageSrc, title, designer, year, country) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalDesigner = document.getElementById('modalDesigner');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMeta = document.getElementById('modalMeta');
+            
+            modalImage.src = imageSrc;
+            modalImage.alt = title;
+            modalDesigner.textContent = designer;
+            modalTitle.textContent = title;
+            modalMeta.textContent = `${year}, ${country}`;
+            
+            modal.classList.add('show');
+            modal.style.display = 'block';
+            
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+            
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeLanguage(language) {
+            currentLanguage = language;
+            
+            // Update language button states
+            const japaneseBtn = document.getElementById('japaneseBtn');
+            const koreanBtn = document.getElementById('koreanBtn');
+            
+            if (japaneseBtn && koreanBtn) {
+                japaneseBtn.classList.toggle('active', language === 'japanese');
+                koreanBtn.classList.toggle('active', language === 'korean');
+            }
+            
+            // Update country filter options
+            updateCountryFilterOptions(language);
+            
+            // Reload data with new language
+            loadAllData();
+        }
+
+        function updateCountryFilterOptions(language) {
+            const countryOptions = document.querySelectorAll('#countryFilter option[data-jp]');
+            countryOptions.forEach(option => {
+                if (language === 'japanese') {
+                    option.textContent = option.getAttribute('data-jp-text');
+                    option.value = option.getAttribute('data-jp');
+                } else {
+                    option.textContent = option.getAttribute('data-kr-text');
+                    option.value = option.getAttribute('data-kr');
+                }
+            });
+        }
+
+        // Start popup functions
+        function showStartPopup() {
+            const startPopup = document.getElementById('startPopup');
+            if (startPopup) {
+                startPopup.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function hideStartPopup() {
+            const startPopup = document.getElementById('startPopup');
+            if (startPopup) {
+                startPopup.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        async function loadAllData() {
+            const loadingEl = document.getElementById('loading');
+            const galleryEl = document.getElementById('gallery');
+            const errorEl = document.getElementById('error');
+            const statsEl = document.getElementById('stats');
+
+            try {
+                // Load all eight JSON files based on current language
+                const [response2001, response2011, response2013, response2015, response2017, response2019, response2021, response2023] = await Promise.all([
+                    fetch(`js/${currentLanguage}/2001.json`),
+                    fetch(`js/${currentLanguage}/2011.json`),
+                    fetch(`js/${currentLanguage}/2013.json`),
+                    fetch(`js/${currentLanguage}/2015.json`),
+                    fetch(`js/${currentLanguage}/2017.json`),
+                    fetch(`js/${currentLanguage}/2019.json`),
+                    fetch(`js/${currentLanguage}/2021.json`),
+                    fetch(`js/${currentLanguage}/2023.json`)
+                ]);
+
+                if (!response2001.ok || !response2011.ok || !response2013.ok || !response2015.ok || !response2017.ok || !response2019.ok || !response2021.ok || !response2023.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const [data2001, data2011, data2013, data2015, data2017, data2019, data2021, data2023] = await Promise.all([
+                    response2001.json(),
+                    response2011.json(),
+                    response2013.json(),
+                    response2015.json(),
+                    response2017.json(),
+                    response2019.json(),
+                    response2021.json(),
+                    response2023.json()
+                ]);
+
+                // Combine all data
+                allData = [...data2001, ...data2011, ...data2013, ...data2015, ...data2017, ...data2019, ...data2021, ...data2023];
+                filteredData = [...allData];
+
+                loadingEl.style.display = 'none';
+                galleryEl.style.display = 'grid';
+                //statsEl.style.display = 'block';
+                
+
+                // Set initial gallery size
+                updateGallerySize();
+                renderGallery();
+                updateStats();
+
+            } catch (error) {
+                console.error('Error loading gallery:', error);
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        function renderGallery() {
+            const galleryEl = document.getElementById('gallery');
+            const noResultsEl = document.getElementById('noResults');
+            
+            // Check if elements exist before proceeding
+            if (!galleryEl || !noResultsEl) {
+                console.error('Gallery or noResults element not found');
+                return;
+            }
+            
+            // Clear existing items
+            galleryEl.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                noResultsEl.style.display = 'block';
+                return;
+            }
+
+            noResultsEl.style.display = 'none';
+
+            // Create gallery items
+            filteredData.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'item';
+                
+                // Determine image path based on year
+                let imagePath;
+                if (item.yr === 2001) {
+                    imagePath = `img/thumb/2001-thumb/${item.file}`;
+                } else if (item.yr === 2011) {
+                    imagePath = `img/thumb/2011-thumb/${item.file}`;
+                } else if (item.yr === 2013) {
+                    imagePath = `img/thumb/2013-thumb/${item.file}`;
+                } else if (item.yr === 2015) {
+                    imagePath = `img/thumb/2015-thumb/${item.file}`;
+                } else if (item.yr === 2017) {
+                    imagePath = `img/thumb/2017-thumb/${item.file}`;
+                } else if (item.yr === 2019) {
+                    imagePath = `img/thumb/2019-thumb/${item.file}`;
+                } else if (item.yr === 2021) {
+                    imagePath = `img/thumb/2021-thumb/${item.file}`;
+                } else if (item.yr === 2023) {
+                    imagePath = `img/thumb/2023-thumb/${item.file}`;
+                }
+                
+                itemEl.innerHTML = `
+                    <div class="item-image-container">
+                        <img src="${imagePath}" alt="${item.title}" class="item-image" 
+                             onerror="this.src='img/noimage.jpg'"
+                             data-full-image="${getFullImagePath(item)}"
+                             data-title="${item.title}"
+                             data-designer="${item.designer}"
+                             data-year="${item.yr}"
+                             data-country="${item.country}">
+                    </div>
+                    <div class="item-content">
+                        <div class="item-designer">${item.designer}</div>
+                        <div class="item-title">${item.title}</div>
+                        <span class="item-country">${item.yr}, ${item.country}</span>
+                    </div>
+                `;
+                
+                galleryEl.appendChild(itemEl);
+            });
+
+            // Add click event listeners to all thumbnail images
+            const thumbnailImages = document.querySelectorAll('.item-image');
+            thumbnailImages.forEach(img => {
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', function() {
+                    const fullImageSrc = this.getAttribute('data-full-image');
+                    const title = this.getAttribute('data-title');
+                    const designer = this.getAttribute('data-designer');
+                    const year = this.getAttribute('data-year');
+                    const country = this.getAttribute('data-country');
+                    showModal(fullImageSrc, title, designer, year, country);
+                });
+            });
+        }
+
+        function updateStats() {
+            const statsEl = document.getElementById('stats');
+            
+            // Check if element exists before proceeding
+            if (!statsEl) {
+                console.error('Stats element not found');
+                return;
+            }
+            
+            const totalItems = allData.length;
+            const displayedItems = filteredData.length;
+            const yearCounts = {};
+            const countryCounts = {};
+
+            // Count by year and country
+            filteredData.forEach(item => {
+                yearCounts[item.yr] = (yearCounts[item.yr] || 0) + 1;
+                countryCounts[item.country] = (countryCounts[item.country] || 0) + 1;
+            });
+
+            const yearText = Object.entries(yearCounts)
+                .sort((a, b) => a[0] - b[0])
+                .map(([year, count]) => `${year}년 ${count}개`)
+                .join(', ');
+
+            const countryText = Object.entries(countryCounts)
+                .map(([country, count]) => `${country} ${count}개`)
+                .join(', ');
+
+            statsEl.innerHTML = `
+                <strong>총 ${totalItems}개 작품 중 ${displayedItems}개 표시</strong><br>
+                년도별: ${yearText} | 나라별: ${countryText}
+            `;
+        }
+
+        function filterData() {
+            const yearFilter = document.getElementById('yearFilter').value;
+            const countryFilter = document.getElementById('countryFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredData = allData.filter(item => {
+                const matchesYear = !yearFilter || item.yr.toString() === yearFilter;
+                const matchesCountry = !countryFilter || item.country === countryFilter;
+                const matchesSearch = !searchTerm || 
+                    item.designer.toLowerCase().includes(searchTerm) ||
+                    item.title.toLowerCase().includes(searchTerm);
+
+                return matchesYear && matchesCountry && matchesSearch;
+            });
+
+            // Update header year highlighting based on year filter
+            const headerYears = document.querySelectorAll('.header-years h2');
+            headerYears.forEach(el => el.classList.remove('active'));
+            
+            if (yearFilter) {
+                const selectedYearElement = document.querySelector(`.header-years h2[data-year="${yearFilter}"]`);
+                if (selectedYearElement) {
+                    selectedYearElement.classList.add('active');
+                }
+            }
+
+            renderGallery();
+            updateStats();
+            
+            // Scroll to top when year filter changes
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function clearFilters() {
+            const yearFilter = document.getElementById('yearFilter');
+            const countryFilter = document.getElementById('countryFilter');
+            const searchInput = document.getElementById('searchInput');
+            
+            if (yearFilter) yearFilter.value = '';
+            if (countryFilter) countryFilter.value = '';
+            if (searchInput) searchInput.value = '';
+            
+            // Remove active class from all header year elements
+            const headerYears = document.querySelectorAll('.header-years h2');
+            headerYears.forEach(el => el.classList.remove('active'));
+            
+            filteredData = [...allData];
+            renderGallery();
+            updateStats();
+        }
+
+        function updateGallerySize() {
+            const galleryEl = document.getElementById('gallery');
+            if (galleryEl) {
+                galleryEl.style.setProperty('--item-size', thumbnailSize + 'px');
+                
+                // 썸네일 크기에 따라 갭 조정
+                if (thumbnailSize <= 250) {
+                    galleryEl.style.gap = '1rem 2rem';
+                    galleryEl.classList.add('small-thumbnails');
+                } else if (thumbnailSize <= 350) {
+                    galleryEl.style.gap = '1.5rem 4rem';
+                    galleryEl.classList.remove('small-thumbnails');
+                } else {
+                    galleryEl.style.gap = '2rem 8rem';
+                    galleryEl.classList.remove('small-thumbnails');
+                }
+            }
+
+            const aboutEl = document.getElementById('about');
+            if (aboutEl) {
+                aboutEl.style.setProperty('--item-size', thumbnailSize + 'px');
+                
+                // 썸네일 크기에 따라 갭 조정
+                if (thumbnailSize <= 250) {
+                    aboutEl.style.gap = '1rem 2rem';
+                    aboutEl.classList.add('small-thumbnails');
+                } else if (thumbnailSize <= 350) {
+                    aboutEl.style.gap = '1.5rem 4rem';
+                    aboutEl.classList.remove('small-thumbnails');
+                } else {
+                    aboutEl.style.gap = '2rem 8rem';
+                    aboutEl.classList.remove('small-thumbnails');
+                }
+            }
+
+            const about2El = document.getElementById('about2');
+            if (about2El) {
+                about2El.style.setProperty('--item-size', thumbnailSize + 'px');
+                
+                // 썸네일 크기에 따라 갭 조정
+                if (thumbnailSize <= 250) {
+                    about2El.style.gap = '1rem 2rem';
+                    about2El.classList.add('small-thumbnails');
+                } else if (thumbnailSize <= 350) {
+                    about2El.style.gap = '1.5rem 4rem';
+                    about2El.classList.remove('small-thumbnails');
+                } else {
+                    about2El.style.gap = '2rem 8rem';
+                    about2El.classList.remove('small-thumbnails');
+                }
+            }
+        }
+
+        function updateThumbnailSize() {
+            const sizeSlider = document.getElementById('sizeSlider');
+            const sizeDisplay = document.getElementById('sizeDisplay');
+            
+            if (sizeSlider && sizeDisplay) {
+                thumbnailSize = parseInt(sizeSlider.value);
+                sizeDisplay.textContent = thumbnailSize + 'px';
+                updateGallerySize();
+            }
+        }
+
+        // Event listeners - wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set mobile default values
+            if (window.innerWidth <= 768) {
+                thumbnailSize = 300;
+                const sizeSlider = document.getElementById('sizeSlider');
+                const sizeDisplay = document.getElementById('sizeDisplay');
+                if (sizeSlider) sizeSlider.value = 300;
+                if (sizeDisplay) sizeDisplay.textContent = '300px';
+            }
+            
+            // Update country filter options for initial language
+            updateCountryFilterOptions(currentLanguage);
+            
+            // Show start popup
+            showStartPopup();
+            
+            // Load the gallery when the page loads
+            loadAllData();
+            
+            // Add event listeners after DOM is ready
+            const yearFilter = document.getElementById('yearFilter');
+            const countryFilter = document.getElementById('countryFilter');
+            const searchInput = document.getElementById('searchInput');
+            const clearFilters = document.getElementById('clearFilters');
+            const sizeSlider = document.getElementById('sizeSlider');
+            
+            if (yearFilter) yearFilter.addEventListener('change', filterData);
+            if (countryFilter) countryFilter.addEventListener('change', filterData);
+            if (searchInput) searchInput.addEventListener('input', filterData);
+            if (clearFilters) clearFilters.addEventListener('click', clearFilters);
+            if (sizeSlider) sizeSlider.addEventListener('input', updateThumbnailSize);
+
+            // Modal event listeners
+            const modal = document.getElementById('imageModal');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalClose = document.getElementById('modalClose');
+            const modalContent = document.getElementById('modalContent');
+
+            // Close modal when clicking anywhere on the modal (overlay)
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    // Close if clicking on the modal background or overlay
+                    if (e.target === modal || e.target === modalOverlay) {
+                        hideModal();
+                    }
+                });
+            }
+            
+            // Close modal when clicking close button
+            if (modalClose) {
+                modalClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    hideModal();
+                });
+            }
+
+            // Close modal when clicking on the image
+            const modalImage = document.getElementById('modalImage');
+            if (modalImage) {
+                modalImage.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    hideModal();
+                });
+            }
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && modal && modal.style.display === 'block') {
+                    hideModal();
+                }
+            });
+
+            // Header h1 click event (reload page)
+            const headerH1 = document.querySelector('.header h1');
+            if (headerH1) {
+                headerH1.style.cursor = 'pointer';
+                headerH1.addEventListener('click', function() {
+                    window.location.reload();
+                });
+            }
+
+            // Header year click events
+            const headerYears = document.querySelectorAll('.header-years h2');
+            headerYears.forEach(yearElement => {
+                yearElement.style.cursor = 'pointer';
+                yearElement.addEventListener('click', function() {
+                    const year = this.getAttribute('data-year');
+                    const yearFilter = document.getElementById('yearFilter');
+                    if (yearFilter) {
+                        yearFilter.value = year;
+                        filterData();
+                        
+                        // Remove active class from all year elements
+                        headerYears.forEach(el => el.classList.remove('active'));
+                        // Add active class to clicked element
+                        this.classList.add('active');
+                        
+                        // Scroll to top when header year is clicked
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Language button events
+            const japaneseBtn = document.getElementById('japaneseBtn');
+            const koreanBtn = document.getElementById('koreanBtn');
+            
+            if (japaneseBtn) {
+                japaneseBtn.addEventListener('click', function() {
+                    changeLanguage('japanese');
+                });
+            }
+            
+            if (koreanBtn) {
+                koreanBtn.addEventListener('click', function() {
+                    changeLanguage('korean');
+                });
+            }
+
+            // Start popup click events
+            const startPopup = document.getElementById('startPopup');
+            const startPopupOverlay = document.querySelector('.start-popup-overlay');
+            const startPopupContent = document.querySelector('.start-popup-content');
+
+            if (startPopup) {
+                startPopup.addEventListener('click', function(e) {
+                    // Close when clicking anywhere on the popup
+                    hideStartPopup();
+                });
+            }
+        });
+    </script>
+    </body>
+</html>
